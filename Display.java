@@ -1,7 +1,11 @@
-import javax.swing.*;
+import javax.swing.JFrame;
 
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.awt.image.BufferStrategy;
+import java.awt.Canvas;
+import java.awt.Dimension;
 
 public class Display extends JFrame {
     private Canvas canvas;

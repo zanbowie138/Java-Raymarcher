@@ -6,7 +6,7 @@ public class FrameLoop implements Runnable{
 
     private long nextStatTime;
     private int fps;
-    private int frameCount;
+    private long lastTime;
 
     public FrameLoop() {
         this.renderer = new Renderer();
@@ -15,7 +15,7 @@ public class FrameLoop implements Runnable{
     @Override
     public void run() {
         running = true;
-        frameCount = 0;
+        lastTime = System.currentTimeMillis();
       
         while (running) {
             this.render();
@@ -31,8 +31,13 @@ public class FrameLoop implements Runnable{
         }
     }
     private void render() {
-        renderer.render(frameCount);
+        renderer.render(deltaTime());
         fps++;
-        frameCount++;
+    }
+    private float deltaTime() {
+        // Return time since last call in milliseconds
+        float elapsedTime = System.currentTimeMillis() - lastTime;
+        lastTime = System.currentTimeMillis();
+        return elapsedTime;
     }
 }
