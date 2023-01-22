@@ -1,4 +1,5 @@
 package src;
+import libs.utils;
 import libs.vec3;
 
 public class Sphere extends RenderableObject {
@@ -24,11 +25,6 @@ public class Sphere extends RenderableObject {
   @Override
   public float signedDist(vec3 point) {
     return vec3.getDist(this.pos(),point) - this.radius;
-  }
-
-  @Override
-  public vec3 getNormal(vec3 point) {
-    return vec3.getDirVec(this.pos(),point);
   }
 
   public int getRadius() {

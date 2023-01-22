@@ -1,4 +1,5 @@
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import libs.*;
@@ -19,9 +20,9 @@ public class Renderer {
 
   public Renderer() {
     worldViewport = new int[]{200,200};
-    resolution = new int[]{500,500};
+    resolution = new int[]{300,300};
 
-    display = new Display(resolution[0], resolution[1], "Raymarcher");
+    display = new Display(700, 700, "Raymarcher");
 
     time = 0;
 
@@ -37,7 +38,7 @@ public class Renderer {
 
     Sphere sphere = new Sphere(sphereCenter, sphereSize, new vec3(1,0,0));
     Sphere sphere2 = new Sphere(new vec3(0,-50,-20), 10, new vec3(0,1,0));
-    objects = new RenderableObject[]{sphere, sphere2};
+    objects = new RenderableObject[]{sphere};
 
     light = new Light(lightPosition,lightColor);
   }
@@ -53,14 +54,17 @@ public class Renderer {
     vec3 dir = new vec3(0,0,1);
 
     int maxDist = 10000;
-
+    long time = FrameLoop.getInstance().getTime();
+    for (RenderableObject object : objects) {
+      object.setTime(time);
+    }
     for (int x = 0; x < resolution[0]; x++) {
       for (int y = 0; y < resolution[1]; y++) {
         vec3 px = new vec3(camera.x() + x * pixel_x, camera.y() + y * pixel_y, camera.z()).add(transform);
 
         boolean finished = false;
         while (!finished) {
-          rayMarchReturn rayMarchReturn = rayMarch(objects, px);
+          rayMarchReturn rayMarchReturn = rayMarchSine(objects, px);
           float closestSignedDist = rayMarchReturn.signedDist;
           RenderableObject closestObject = objects[rayMarchReturn.object];
 
@@ -95,6 +99,18 @@ public class Renderer {
     return new rayMarchReturn(object, closestSignedDist);
   }
 
+  private static rayMarchReturn rayMarchSine(RenderableObject[] objects, vec3 px) {
+    float closestSignedDist = objects[0].signedDistSine(px);
+    int object = 0;
+    for (int i = 1; i < objects.length; i++) {
+      if (objects[i].signedDistSine(px) < closestSignedDist) {
+        closestSignedDist = objects[i].signedDistSine(px);
+        object = i;
+      }
+    }
+    return new rayMarchReturn(object, closestSignedDist);
+  }
+
   private static vec3 calcColor(Light light, Camera cam, RenderableObject obj, vec3 pt) {
     vec3 baseColor = obj.getColor();
     
@@ -102,14 +118,14 @@ public class Renderer {
     vec3 ambient = vec3.scale(light.getColor(), ambientIntensity);
 
     float diffuseIntensity = 0.5f;
-    vec3 normalVector = obj.getNormal(pt);
+    vec3 normalVector = obj.estimateNormal(pt);
     vec3 pointToLightVector = vec3.getDirVec(pt, light.pos());
     float diffuseDot = Math.max(vec3.dot(normalVector,pointToLightVector),0);
     vec3 diffuse = new vec3(diffuseDot * diffuseIntensity);
 
     float specularIntensity = 0.4f;
     vec3 viewVector = vec3.getDirVec(pt, cam.pos());
-    vec3 reflectVector = vec3.reflect(obj.getNormal(pt), pointToLightVector.reverse());
+    vec3 reflectVector = vec3.reflect(obj.estimateNormal(pt), pointToLightVector.reverse());
     float specularDot = (float)Math.pow(Math.max(vec3.dot(viewVector, reflectVector),0),32);
     vec3 specular = vec3.mult(new vec3(specularDot * specularIntensity), light.getColor());
     //System.out.println(specular);

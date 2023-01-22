@@ -107,6 +107,11 @@ public class vec3 {
     return this.set(new vec3(-x,-y,-z));
   }
 
+  public vec3 mod(float num) {
+    // Returns the modulus of the vector
+    return this.set(new vec3(x%num,y%num,z%num));
+  }
+
   public vec3 pow(float power) {
     // Raises the vector to a power
     return this.set(new vec3((float)Math.pow(x,power),(float)Math.pow(y,power),(float)Math.pow(z,power)));
