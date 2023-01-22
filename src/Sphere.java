@@ -1,4 +1,7 @@
-class Sphere extends RenderableObject {
+package src;
+import libs.vec3;
+
+public class Sphere extends RenderableObject {
   private int radius;
 
   public Sphere() {

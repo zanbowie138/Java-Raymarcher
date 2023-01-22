@@ -1,15 +1,24 @@
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
-import javax.imageio.ImageIO;
-import java.util.Arrays;
-class Main {
-  public static void main(String[] args) {
-    int[] dimensions = {200,200};
-    int[] resolution = {200,200};
+import java.awt.image.BufferedImage;
+
+import libs.*;
+import src.*;
+
+public class Renderer {
+  private Display display;
+
+  private int[] dimensions;
+  private int[] resolution;
+  
+  private Camera camera;
+  private RenderableObject[] objects;
+  private Light light;
+
+  public Renderer() {
+    dimensions = new int[]{200,200};
+    resolution = new int[]{200,200};
+
+    display = new Display(resolution[0], resolution[1], "Raymarcher");
 
     vec3 camPosition = new vec3(0,0,-20);
 
@@ -19,14 +28,15 @@ class Main {
     vec3 lightPosition = new vec3(0,-100,-100);
     vec3 lightColor = new vec3(1,1,1);
     
-    Camera camera = new Camera(camPosition);
+    camera = new Camera(camPosition);
 
     Sphere sphere = new Sphere(sphereCenter, sphereSize, new vec3(255,0,0));
+    objects = new RenderableObject[]{sphere};
 
-    Light light = new Light(lightPosition,lightColor);
+    light = new Light(lightPosition,lightColor);
     
-    imageIoWritePNG(generateFrameIso(camera, dimensions, resolution, light, new RenderableObject[]{sphere}), "output.png");
-    System.out.println("Finished!");
+    //imageIoWritePNG(generateFrameIso(camera, dimensions, resolution, light, new RenderableObject[]{sphere}), "output.png");
+    //System.out.println("Finished!");
   }
 
   // Generates a frame of the scene in isometric view
@@ -44,7 +54,7 @@ class Main {
         vec3 px = new vec3(camera.x() + x * pixel_x, camera.y() + y * pixel_y, camera.z()).add(transform);
         boolean finished = false;
         while (!finished) {
-          float closestSignedDist = utils.rayMarch(objects, px);
+          float closestSignedDist = rayMarch(objects, px);
           Sphere usedObject = (Sphere)objects[0];
 
           if (closestSignedDist < 0.1) {
@@ -76,14 +86,19 @@ class Main {
     return frame;
   }
 
-  public static void imageIoWritePNG(BufferedImage img, String location) {
-    // Prints BufferedImage to location as a png file
-    File output = new File(location);
-    try {
-      ImageIO.write(img, "png", output);
-      System.out.println("Created image!");
-    } catch (IOException e) {
-      System.out.println("Exception occured :" + e.getMessage());
+  public void render(int frameCount) {
+    display.render(generateFrameIso(camera, dimensions, resolution, light, objects));
+  }
+
+  public static float rayMarch(RenderableObject[] objects, vec3 px) {
+    float closestSignedDist = objects[0].signedDist(px);
+    //Sphere usedObject = (Sphere)objects[0];
+    for (RenderableObject object : objects) {
+      if (object.signedDist(px) < closestSignedDist) {
+        closestSignedDist = object.signedDist(px);
+        //usedObject = (Sphere)object;
+      }
     }
+    return closestSignedDist;
   }
 }

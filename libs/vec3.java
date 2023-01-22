@@ -1,4 +1,6 @@
+package libs;
 import java.lang.Math;
+
 public class vec3 {
   private float x;
   private float y;

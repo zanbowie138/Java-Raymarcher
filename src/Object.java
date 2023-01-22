@@ -1,4 +1,7 @@
-abstract class Object {
+package src;
+import libs.vec3;
+
+public abstract class Object {
   private vec3 pos;
   public void setPos(vec3 pos) {
     this.pos = pos;

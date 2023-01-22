@@ -1,4 +1,7 @@
-class Light extends Object{
+package src;
+import libs.vec3;
+
+public class Light extends Object{
     private vec3 color;
     private float intensity;
     public Light(vec3 pos, vec3 color) {

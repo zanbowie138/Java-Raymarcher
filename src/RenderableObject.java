@@ -1,4 +1,7 @@
-abstract class RenderableObject extends Object{
+package src;
+import libs.vec3;
+
+public abstract class RenderableObject extends Object{
   private vec3 color;
   public abstract float signedDist(vec3 point);
 
