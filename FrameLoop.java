@@ -25,15 +25,18 @@ public class FrameLoop implements Runnable{
     private void printStats() {
         // Print FPS every second
         if (System.currentTimeMillis() > nextStatTime) {
-            System.out.println(String.format("FPS: %d", fps));
+            //System.out.println(String.format("FPS: %d", fps));
+            renderer.updateFPS(fps);
             fps = 0;
             nextStatTime = System.currentTimeMillis() + 1000;
         }
     }
+
     private void render() {
         renderer.render(deltaTime());
         fps++;
     }
+
     private float deltaTime() {
         // Return time since last call in milliseconds
         float elapsedTime = System.currentTimeMillis() - lastTime;

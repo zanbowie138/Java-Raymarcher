@@ -7,12 +7,12 @@ public class Sphere extends RenderableObject {
   public Sphere() {
     this.setPos(new vec3(0,0,0));
     this.radius = 10;
-    this.setColor(new vec3(255,255,255));
+    this.setColor(new vec3(1,1,1));
   }
   public Sphere(vec3 pos, int radius) {
     this.setPos(pos);
     this.radius = radius;
-    this.setColor(new vec3(255,255,255));
+    this.setColor(new vec3(1,1,1));
   }
 
   public Sphere(vec3 pos, int radius, vec3 color) {
@@ -26,7 +26,12 @@ public class Sphere extends RenderableObject {
     return vec3.getDist(this.pos(),point) - this.radius;
   }
 
+  @Override
   public vec3 getNormal(vec3 point) {
     return vec3.getDirVec(this.pos(),point);
+  }
+
+  public int getRadius() {
+    return this.radius;
   }
 }
