@@ -35,6 +35,21 @@ public class vec3 {
     return z;
   }
 
+  public float setX(float x) {
+    this.x = x;
+    return x;
+  }
+
+  public float setY(float y) {
+    this.y = y;
+    return y;
+  }
+
+  public float setZ(float z) {
+    this.z = z;
+    return z;
+  }
+
   public vec3 set(float x, float y, float z) {
     this.x = x;
     this.y = y;

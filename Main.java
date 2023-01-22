@@ -42,12 +42,11 @@ class Main {
     for (int x = 0; x < resolution[0]; x++) {
       for (int y = 0; y < resolution[1]; y++) {
         vec3 px = new vec3(camera.x() + x * pixel_x, camera.y() + y * pixel_y, camera.z()).add(transform);
-        //System.out.println(px);
         boolean finished = false;
         while (!finished) {
           float closestSignedDist = utils.rayMarch(objects, px);
           Sphere usedObject = (Sphere)objects[0];
-          //System.out.println(closestSignedDist);
+
           if (closestSignedDist < 0.1) {
             float ambient = 0.1f;
             float diffuse = vec3.dot(usedObject.getNormal(px),vec3.getDirVec(px,light.pos()));
@@ -55,13 +54,19 @@ class Main {
               diffuse = 0;
             }
             vec3 baseColor = new vec3(255,0,0);
-            frame.setRGB(x, y, utils.getRGB(baseColor.mult(diffuse)));
+            vec3 calcColor = vec3.add(vec3.scale(baseColor,ambient),vec3.scale(baseColor,diffuse));
+            if (calcColor.x() > 255) {
+              calcColor.setX(255f);
+            }
+            frame.setRGB(x, y, utils.getRGB(calcColor));
             finished = true;
           } 
+          
           else if (closestSignedDist > maxDist) {
             frame.setRGB(x, y, utils.getRGB(0,0,0));
             finished = true;
           }
+
           else {
             px.add(vec3.scale(dir,closestSignedDist));
           }
