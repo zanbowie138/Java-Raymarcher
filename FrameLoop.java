@@ -23,6 +23,7 @@ public class FrameLoop implements Runnable{
         }
     }
     private void printStats() {
+        // Print FPS every second
         if (System.currentTimeMillis() > nextStatTime) {
             System.out.println(String.format("FPS: %d", fps));
             fps = 0;

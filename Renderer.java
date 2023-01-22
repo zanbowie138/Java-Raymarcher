@@ -16,7 +16,7 @@ public class Renderer {
 
   public Renderer() {
     dimensions = new int[]{200,200};
-    resolution = new int[]{200,200};
+    resolution = new int[]{500,500};
 
     display = new Display(resolution[0], resolution[1], "Raymarcher");
 
@@ -34,24 +34,24 @@ public class Renderer {
     objects = new RenderableObject[]{sphere};
 
     light = new Light(lightPosition,lightColor);
-    
-    //imageIoWritePNG(generateFrameIso(camera, dimensions, resolution, light, new RenderableObject[]{sphere}), "output.png");
-    //System.out.println("Finished!");
   }
 
   // Generates a frame of the scene in isometric view
   public static BufferedImage generateFrameIso(Camera camera, int[] dimensions, int[] resolution, Light light, RenderableObject[] objects) {
-    // Generates a frame of the scene
     BufferedImage frame = new BufferedImage(resolution[0], resolution[1], BufferedImage.TYPE_INT_RGB);
+
     vec3 transform = new vec3(-dimensions[0]/2, -dimensions[1]/2, 0);
     float pixel_x = (float)dimensions[0]/(float)resolution[0];
     float pixel_y = (float)dimensions[1]/(float)resolution[1];
+
     vec3 dir = new vec3(0,0,1);
+
     int maxDist = 1000;
 
     for (int x = 0; x < resolution[0]; x++) {
       for (int y = 0; y < resolution[1]; y++) {
         vec3 px = new vec3(camera.x() + x * pixel_x, camera.y() + y * pixel_y, camera.z()).add(transform);
+
         boolean finished = false;
         while (!finished) {
           float closestSignedDist = rayMarch(objects, px);
@@ -87,16 +87,15 @@ public class Renderer {
   }
 
   public void render(int frameCount) {
+    light.setPos(new vec3((float)Math.sin(frameCount/100f)*100f, -70, -70));
     display.render(generateFrameIso(camera, dimensions, resolution, light, objects));
   }
 
   public static float rayMarch(RenderableObject[] objects, vec3 px) {
     float closestSignedDist = objects[0].signedDist(px);
-    //Sphere usedObject = (Sphere)objects[0];
     for (RenderableObject object : objects) {
       if (object.signedDist(px) < closestSignedDist) {
         closestSignedDist = object.signedDist(px);
-        //usedObject = (Sphere)object;
       }
     }
     return closestSignedDist;
