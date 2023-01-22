@@ -1,5 +1,5 @@
 import java.lang.Math;
-class vec3 {
+public class vec3 {
   private float x;
   private float y;
   private float z;
@@ -7,6 +7,12 @@ class vec3 {
     x = 0;
     y = 0;
     z = 0;
+  }
+
+  public vec3(float num) {
+    this.x = num;
+    this.y = num;
+    this.z = num;
   }
   
   public vec3(float x, float y, float z) {
@@ -121,5 +127,18 @@ class vec3 {
 
   public static float getDist(vec3 vec1, vec3 vec2) {
     return vec3.sub(vec1,vec2).getMagnitude();
+  }
+
+  public static vec3 getDirVec(vec3 vec1, vec3 vec2) {
+    // Returns a normalized vector pointing from vec1 to vec2
+    return vec3.sub(vec2,vec1).normalize();
+  }
+
+  public static float dot(vec3 vec1, vec3 vec2) {
+    return vec1.x*vec2.x + vec1.y*vec2.y + vec1.z*vec2.z;
+  }
+
+  public static float cos(vec3 vec1, vec3 vec2) {
+    return vec3.dot(vec1,vec2) / (vec1.getMagnitude() * vec2.getMagnitude());
   }
 }
