@@ -31,8 +31,10 @@ public class Renderer{
     camera = new Camera(camPosition);
 
     SphereSine sphere = new SphereSine(sphereCenter, sphereSize, new vec3(1,0,0));
-    Sphere sphere2 = new Sphere(new vec3(0,-50,-20), 10, new vec3(0,1,0));
-    objects = new RenderableObject[]{sphere};
+    Plane plane = new Plane(new vec3(0f,1f,0f).normalize(), 200,new vec3(0f,1f,0f));
+    utils.p(new vec3(0f,5f,10f).normalize());
+    Sphere sphere2 = new Sphere(new vec3(1,0,0), 10, new vec3(0,1,0));
+    objects = new RenderableObject[]{sphere,plane};
 
     light = new Light(lightPosition,lightColor);
   }
@@ -48,7 +50,8 @@ public class Renderer{
 
     BufferedImage frame = new BufferedImage(resolution[0], resolution[1], BufferedImage.TYPE_INT_RGB);
 
-    int maxDist = 10000;
+    int maxRayDist = 10000;
+    int maxSightDist = 5000;
 
     for (int x = 0; x < resolution[0]; x++) {
       for (int y = 0; y < resolution[1]; y++) {
@@ -64,13 +67,14 @@ public class Renderer{
           rayMarchReturn rayMarchReturn = rayMarch(objects, px);
           float closestSignedDist = rayMarchReturn.signedDist;
           RenderableObject closestObject = objects[rayMarchReturn.object];
+          //System.out.println(px);
 
-          if (closestSignedDist < 0.0001) {
+          if (closestSignedDist < 1) {
             frame.setRGB(x, y, utils.rgbToInt(calcColor(light, camera, closestObject, px)));
             finished = true;
           } 
           
-          else if (closestSignedDist > maxDist) {
+          else if (closestSignedDist > maxRayDist | vec3.getDist(px, camera.pos()) > maxSightDist) {
             frame.setRGB(x, y, utils.rgbToInt(0,0,0));
             finished = true;
           }
@@ -140,7 +144,7 @@ public class Renderer{
   }
 
   private void updateObjects() {
-    int speed = 20;
+    int speed = 1000;
     InputManager inputManager = FrameLoop.getInstance().getInputManager();
     float deltaTime = FrameLoop.getInstance().getDeltaTime()/1000;
     for (RenderableObject object : objects) {

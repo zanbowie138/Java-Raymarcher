@@ -48,6 +48,7 @@ public class utils {
     float t_scale = .003f;
     float dis = 50f;
     float scale = 0.5f;
+    //System.out.println(p);
     return (float)utils.sin(dis*(p.x + t_scale*t)) + (float)utils.sin(dis*(p.y + t_scale*t)) + (float)utils.sin(dis*(p.z + t_scale*t)) * scale;
   }
   public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
@@ -55,5 +56,8 @@ public class utils {
     BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
     outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
     return outputImage;
+  }
+  public static void p(Object p) {
+    System.out.println(p);
   }
 }
