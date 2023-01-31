@@ -117,6 +117,11 @@ public class vec3 {
     return this.set(new vec3((float)Math.pow(x,power),(float)Math.pow(y,power),(float)Math.pow(z,power)));
   }
 
+  public vec3 copy() {
+    // Returns a copy of the vector
+    return new vec3(x,y,z);
+  }
+
   public static vec3 asVec3(float[] arr) {
     // Converts a float array of length 3 to a vec3
     return new vec3(arr[0],arr[1],arr[2]);

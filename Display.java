@@ -32,6 +32,10 @@ public class Display extends JFrame {
         this.setFont(new Font("TimesRoman", Font.PLAIN, 32)); 
 
         fps = 0;
+
+        InputManager inputManager = new InputManager();
+        canvas.addKeyListener(inputManager);
+        setFocusable(true);
     }
 
     public void render(BufferedImage frame) {
