@@ -60,4 +60,7 @@ public class utils {
   public static void p(Object p) {
     System.out.println(p);
   }
+  public static float getNormalized (float x, float y) {
+    return (float)Math.sqrt(1 - x*x + y*y);
+  }
 }

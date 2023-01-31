@@ -2,7 +2,6 @@ public class FrameLoop implements Runnable{
     private static FrameLoop instance;
 
     private Renderer renderer;
-    private InputManager inputManager;
 
     private boolean running;
 
@@ -30,7 +29,6 @@ public class FrameLoop implements Runnable{
         startTime = System.currentTimeMillis();
 
         this.renderer = new Renderer();
-        this.inputManager = new InputManager();
       
         while (running) {
             this.render();
@@ -66,9 +64,5 @@ public class FrameLoop implements Runnable{
 
     public long getTime() {
         return System.currentTimeMillis() - startTime;
-    }
-    
-    public InputManager getInputManager() {
-        return inputManager;
     }
 }
