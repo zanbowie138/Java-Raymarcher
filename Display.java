@@ -8,7 +8,6 @@ import javax.swing.JFrame;
 // import java.awt.Dimension;
 // import java.awt.Font;
 import java.awt.*;
-import java.awt.event.*;
 import java.awt.image.*;
 
 public class Display extends JFrame {

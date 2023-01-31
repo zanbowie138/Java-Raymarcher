@@ -30,7 +30,7 @@ public class Renderer{
     
     camera = new Camera(camPosition);
 
-    Sphere sphere = new Sphere(sphereCenter, sphereSize, new vec3(1,0,0));
+    SphereSine sphere = new SphereSine(sphereCenter, sphereSize, new vec3(1,0,0));
     Sphere sphere2 = new Sphere(new vec3(0,-50,-20), 10, new vec3(0,1,0));
     objects = new RenderableObject[]{sphere};
 
@@ -61,7 +61,7 @@ public class Renderer{
 
         boolean finished = false;
         while (!finished) {
-          rayMarchReturn rayMarchReturn = rayMarchSine(objects, px);
+          rayMarchReturn rayMarchReturn = rayMarch(objects, px);
           float closestSignedDist = rayMarchReturn.signedDist;
           RenderableObject closestObject = objects[rayMarchReturn.object];
 
@@ -90,18 +90,6 @@ public class Renderer{
     for (int i = 1; i < objects.length; i++) {
       if (objects[i].signedDist(px) < closestSignedDist) {
         closestSignedDist = objects[i].signedDist(px);
-        object = i;
-      }
-    }
-    return new rayMarchReturn(object, closestSignedDist);
-  }
-
-  private static rayMarchReturn rayMarchSine(RenderableObject[] objects, vec3 px) {
-    float closestSignedDist = objects[0].signedDistSine(px);
-    int object = 0;
-    for (int i = 1; i < objects.length; i++) {
-      if (objects[i].signedDistSine(px) < closestSignedDist) {
-        closestSignedDist = objects[i].signedDistSine(px);
         object = i;
       }
     }
