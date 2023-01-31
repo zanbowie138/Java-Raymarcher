@@ -1,6 +1,5 @@
 package src;
 import libs.vec3;
-import libs.utils;
 
 public abstract class RenderableObject extends Object{
   private vec3 color;
@@ -28,6 +27,7 @@ public abstract class RenderableObject extends Object{
   public void setTime(long time) {
     this.time = time;
   }
+
   public long getTime() {
     return this.time;
   }
