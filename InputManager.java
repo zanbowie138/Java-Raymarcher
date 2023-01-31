@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import java.awt.event.*;
 public class InputManager implements KeyListener, MouseListener {
     private int horizontal;
@@ -87,3 +88,22 @@ public class InputManager implements KeyListener, MouseListener {
     public void mouseClicked(MouseEvent e) {
     }
 }
+=======
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+public class InputManager implements KeyListener {
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        System.out.println("keyPressed="+KeyEvent.getKeyText(e.getKeyCode()));
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        System.out.println("keyReleased="+KeyEvent.getKeyText(e.getKeyCode()));
+    }
+}
+>>>>>>> 05ec7781d5a7533cf546f5070d1c2bccc5b48553

@@ -12,14 +12,21 @@ public class Renderer{
   private RenderableObject[] objects;
   private Light light;
 
+<<<<<<< HEAD
   private InputManager inputManager;
+=======
+  // private perspectiveReturn perspective;
+>>>>>>> 05ec7781d5a7533cf546f5070d1c2bccc5b48553
 
   private long time;
   private float fps;
 
   public Renderer() {
     display = new Display(700, 700, "Raymarcher");
+<<<<<<< HEAD
     inputManager = FrameLoop.getInstance().getInputManager();
+=======
+>>>>>>> 05ec7781d5a7533cf546f5070d1c2bccc5b48553
     resolution = new int[]{400,400};
 
     time = 0;
@@ -42,10 +49,16 @@ public class Renderer{
   }
 
   // Generates a frame of the scene
+<<<<<<< HEAD
   private BufferedImage generateFrame(Camera camera, int[] resolution, Light light, RenderableObject[] objects) {
     // Calculated by dividing screen width by screen height
     float aspectRatio = (float)resolution[0]/resolution[1];
 
+=======
+  private static BufferedImage generateFrame(Camera camera, int[] resolution, Light light, RenderableObject[] objects) {
+    // Calculated by dividing screen width by screen height
+    float aspectRatio = (float)resolution[0]/resolution[1];
+>>>>>>> 05ec7781d5a7533cf546f5070d1c2bccc5b48553
     // The degrees of the field of view in the y direction
     float fovY = 70;
     float fovX = fovY * aspectRatio;
@@ -53,8 +66,15 @@ public class Renderer{
     BufferedImage frame = new BufferedImage(resolution[0], resolution[1], BufferedImage.TYPE_INT_RGB);
 
     int maxDist = 10000;
+<<<<<<< HEAD
 
     updateObjects();
+=======
+    long time = FrameLoop.getInstance().getTime();
+    for (RenderableObject object : objects) {
+      object.setTime(time);
+    }
+>>>>>>> 05ec7781d5a7533cf546f5070d1c2bccc5b48553
 
     for (int x = 0; x < resolution[0]; x++) {
       for (int y = 0; y < resolution[1]; y++) {
