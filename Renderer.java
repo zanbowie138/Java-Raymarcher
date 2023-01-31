@@ -1,32 +1,30 @@
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import libs.*;
 import src.*;
 
-public class Renderer {
+public class Renderer{
   private Display display;
-
-  private int[] worldViewport;
   private int[] resolution;
   
   private Camera camera;
   private RenderableObject[] objects;
   private Light light;
 
+  private InputManager inputManager;
+
   private long time;
   private float fps;
 
   public Renderer() {
-    worldViewport = new int[]{200,200};
-    resolution = new int[]{300,300};
-
     display = new Display(700, 700, "Raymarcher");
+    inputManager = FrameLoop.getInstance().getInputManager();
+    resolution = new int[]{400,400};
 
     time = 0;
 
-    vec3 camPosition = new vec3(0,0,-100);
+    vec3 camPosition = new vec3(0,0,-150);
 
     vec3 sphereCenter = new vec3(0,0,0);
     int sphereSize = 50;
@@ -43,24 +41,29 @@ public class Renderer {
     light = new Light(lightPosition,lightColor);
   }
 
-  // Generates a frame of the scene in isometric view
-  private static BufferedImage generateFrameIso(Camera camera, int[] worldViewport, int[] resolution, Light light, RenderableObject[] objects) {
+  // Generates a frame of the scene
+  private BufferedImage generateFrame(Camera camera, int[] resolution, Light light, RenderableObject[] objects) {
+    // Calculated by dividing screen width by screen height
+    float aspectRatio = (float)resolution[0]/resolution[1];
+
+    // The degrees of the field of view in the y direction
+    float fovY = 70;
+    float fovX = fovY * aspectRatio;
+
     BufferedImage frame = new BufferedImage(resolution[0], resolution[1], BufferedImage.TYPE_INT_RGB);
 
-    vec3 transform = new vec3(-worldViewport[0]/2, -worldViewport[1]/2, 0);
-    float pixel_x = (float)worldViewport[0]/(float)resolution[0];
-    float pixel_y = (float)worldViewport[1]/(float)resolution[1];
-
-    vec3 dir = new vec3(0,0,1);
-
     int maxDist = 10000;
-    long time = FrameLoop.getInstance().getTime();
-    for (RenderableObject object : objects) {
-      object.setTime(time);
-    }
+
+    updateObjects();
+
     for (int x = 0; x < resolution[0]; x++) {
       for (int y = 0; y < resolution[1]; y++) {
-        vec3 px = new vec3(camera.x() + x * pixel_x, camera.y() + y * pixel_y, camera.z()).add(transform);
+        vec3 px = camera.pos().copy();
+
+        float dirX = (float)utils.sin((float)(fovX * ((float)x/resolution[0] - 0.5f)));
+        float dirY = (float)utils.sin((float)(fovY * ((float)y/resolution[1] - 0.5f)));
+        float dirZ = (float)Math.sqrt(1 - dirX*dirX - dirY*dirY);
+        vec3 dir = new vec3(dirX, dirY, dirZ);
 
         boolean finished = false;
         while (!finished) {
@@ -146,11 +149,23 @@ public class Renderer {
   public void render(float deltaTime) {
     time += deltaTime;
     light.setPos(new vec3((float)Math.sin(time/5/100f)*100f, -90, -90));
-    display.render(generateFrameIso(camera, worldViewport, resolution, light, objects));
+    display.render(generateFrame(camera, resolution, light, objects));
   }
 
   public float updateFPS(float fps) {
     display.updateFPS(fps);
     return this.fps = fps;
+  }
+
+  private void updateObjects() {
+    int speed = 20;
+    long time = FrameLoop.getInstance().getTime();
+    float deltaTime = FrameLoop.getInstance().getDeltaTime()/1000;
+    for (RenderableObject object : objects) {
+      object.setTime(time);
+    }
+
+    camera.move(new vec3(0,0,1).mult(inputManager.getHorizontal() * deltaTime * speed));
+    camera.move(new vec3(1,0,0).mult(inputManager.getVertical() * deltaTime * speed));
   }
 }

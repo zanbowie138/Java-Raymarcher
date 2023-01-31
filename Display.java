@@ -1,12 +1,15 @@
 import javax.swing.JFrame;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferStrategy;
-import java.awt.Canvas;
-import java.awt.Dimension;
-import java.awt.Font;
+// import java.awt.Color;
+// import java.awt.Graphics;
+// import java.awt.image.BufferedImage;
+// import java.awt.image.BufferStrategy;
+// import java.awt.Canvas;
+// import java.awt.Dimension;
+// import java.awt.Font;
+import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.*;
 
 public class Display extends JFrame {
     private Canvas canvas;
@@ -30,8 +33,11 @@ public class Display extends JFrame {
         this.setVisible(true);
 
         this.setFont(new Font("TimesRoman", Font.PLAIN, 32)); 
+        //this.addKeyListener(FrameLoop.getInstance().getInputManager());
 
         fps = 0;
+
+        setFocusable(true);
     }
 
     public void render(BufferedImage frame) {

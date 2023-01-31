@@ -1,10 +1,12 @@
 public class FrameLoop implements Runnable{
-
     private static FrameLoop instance;
 
     private Renderer renderer;
+    private InputManager inputManager;
 
     private boolean running;
+
+    private float deltaTime;
 
     private long nextStatTime;
     private int fps;
@@ -14,6 +16,7 @@ public class FrameLoop implements Runnable{
 
     private FrameLoop() {
         this.renderer = new Renderer();
+        this.inputManager = new InputManager();
     }
 
     public static FrameLoop getInstance() {
@@ -46,18 +49,27 @@ public class FrameLoop implements Runnable{
     }
 
     private void render() {
-        renderer.render(deltaTime());
+        updateDeltaTime();
+        renderer.render(getDeltaTime());
         fps++;
     }
 
-    private float deltaTime() {
+    private float updateDeltaTime() {
         // Return time since last call in milliseconds
         float elapsedTime = System.currentTimeMillis() - lastTime;
         lastTime = System.currentTimeMillis();
-        return elapsedTime;
+        return deltaTime = elapsedTime;
+    }
+
+    public float getDeltaTime() {
+        return deltaTime;
     }
 
     public long getTime() {
         return System.currentTimeMillis() - startTime;
+    }
+    
+    public InputManager getInputManager() {
+        return inputManager;
     }
 }

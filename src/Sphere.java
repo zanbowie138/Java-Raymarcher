@@ -1,5 +1,4 @@
 package src;
-import libs.utils;
 import libs.vec3;
 
 public class Sphere extends RenderableObject {
