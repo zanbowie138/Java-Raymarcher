@@ -37,11 +37,6 @@ public class Display extends JFrame {
 
         fps = 0;
 
-<<<<<<< HEAD
-=======
-        InputManager inputManager = new InputManager();
-        canvas.addKeyListener(inputManager);
->>>>>>> 05ec7781d5a7533cf546f5070d1c2bccc5b48553
         setFocusable(true);
     }
 
