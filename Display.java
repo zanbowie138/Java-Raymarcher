@@ -33,7 +33,6 @@ public class Display extends JFrame {
         this.setVisible(true);
 
         this.setFont(new Font("TimesRoman", Font.PLAIN, 32)); 
-        //this.addKeyListener(FrameLoop.getInstance().getInputManager());
 
         fps = 0;
 
@@ -41,11 +40,11 @@ public class Display extends JFrame {
     }
 
     public void render(BufferedImage frame) {
+        this.addKeyListener(FrameLoop.getInstance().getInputManager());
         BufferStrategy bufferStrategy = canvas.getBufferStrategy();
         Graphics graphics = bufferStrategy.getDrawGraphics();
 
         graphics.setColor(Color.white);
-        //graphics.drawRect(0,0,canvas.getWidth(), canvas.getHeight());
         graphics.drawImage(frame, 0,0, canvas.getWidth(), canvas.getHeight(), null);
         graphics.drawString(String.format("FPS: %d", (int)fps), 30, canvas.getHeight() - 30);
 

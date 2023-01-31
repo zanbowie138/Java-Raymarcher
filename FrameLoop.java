@@ -14,10 +14,7 @@ public class FrameLoop implements Runnable{
 
     private long startTime;
 
-    private FrameLoop() {
-        this.renderer = new Renderer();
-        this.inputManager = new InputManager();
-    }
+    private FrameLoop() {}
 
     public static FrameLoop getInstance() {
         if (instance == null) {
@@ -31,6 +28,9 @@ public class FrameLoop implements Runnable{
         running = true;
         lastTime = System.currentTimeMillis();
         startTime = System.currentTimeMillis();
+
+        this.renderer = new Renderer();
+        this.inputManager = new InputManager();
       
         while (running) {
             this.render();
@@ -41,7 +41,6 @@ public class FrameLoop implements Runnable{
     private void printStats() {
         // Print FPS every second
         if (System.currentTimeMillis() > nextStatTime) {
-            //System.out.println(String.format("FPS: %d", fps));
             renderer.updateFPS(fps);
             fps = 0;
             nextStatTime = System.currentTimeMillis() + 1000;

@@ -24,30 +24,18 @@ public class InputManager implements KeyListener, MouseListener {
       if (e.getKeyCode() == KeyEvent.VK_W) {
         if (vertical == 0)
           vertical = 1;
-        else {
-          vertical = 0;
-        }
       }
       if (e.getKeyCode() == KeyEvent.VK_S) {
         if (vertical == 0)
           vertical = -1;
-        else {
-          vertical = 0;
-        }
       }
       if (e.getKeyCode() == KeyEvent.VK_A) {
         if (horizontal == 0)
           horizontal = -1;
-        else {
-          horizontal = 0;
-        }
       }
       if (e.getKeyCode() == KeyEvent.VK_D) {
         if (horizontal == 0)
           horizontal = 1;
-        else {
-          horizontal = 0;
-        }
       }
     }
   

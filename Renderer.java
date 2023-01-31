@@ -12,14 +12,10 @@ public class Renderer{
   private RenderableObject[] objects;
   private Light light;
 
-  private InputManager inputManager;
-
   private long time;
-  private float fps;
 
   public Renderer() {
     display = new Display(700, 700, "Raymarcher");
-    inputManager = FrameLoop.getInstance().getInputManager();
     resolution = new int[]{400,400};
 
     time = 0;
@@ -53,8 +49,6 @@ public class Renderer{
     BufferedImage frame = new BufferedImage(resolution[0], resolution[1], BufferedImage.TYPE_INT_RGB);
 
     int maxDist = 10000;
-
-    updateObjects();
 
     for (int x = 0; x < resolution[0]; x++) {
       for (int y = 0; y < resolution[1]; y++) {
@@ -148,24 +142,24 @@ public class Renderer{
 
   public void render(float deltaTime) {
     time += deltaTime;
+    updateObjects();
     light.setPos(new vec3((float)Math.sin(time/5/100f)*100f, -90, -90));
     display.render(generateFrame(camera, resolution, light, objects));
   }
 
-  public float updateFPS(float fps) {
+  public void updateFPS(float fps) {
     display.updateFPS(fps);
-    return this.fps = fps;
   }
 
   private void updateObjects() {
     int speed = 20;
-    long time = FrameLoop.getInstance().getTime();
+    InputManager inputManager = FrameLoop.getInstance().getInputManager();
     float deltaTime = FrameLoop.getInstance().getDeltaTime()/1000;
     for (RenderableObject object : objects) {
       object.setTime(time);
     }
 
-    camera.move(new vec3(0,0,1).mult(inputManager.getHorizontal() * deltaTime * speed));
-    camera.move(new vec3(1,0,0).mult(inputManager.getVertical() * deltaTime * speed));
+    camera.move(new vec3(0,0,1).mult(inputManager.getVertical() * deltaTime * speed));
+    camera.move(new vec3(1,0,0).mult(inputManager.getHorizontal() * deltaTime * speed));
   }
 }
