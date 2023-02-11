@@ -44,10 +44,10 @@ public class Renderer{
     light = new Light(lightPosition,lightColor);
     
     try {
-        BufferedImage image = utils.convertToARGB(ImageIO.read(new File("res/curtain.jpg")));
+        BufferedImage image = utils.convertToARGB(ImageIO.read(new File("res/studio.jpg")));
         skybox = utils.get2D(image);
-        //BufferedImage texture = utils.convertToARGB(ImageIO.read(new File("res/checker.png")));
-        //sphere.setTexture(utils.get2D(texture));
+        BufferedImage texture = utils.convertToARGB(ImageIO.read(new File("res/checkers.png")));
+        sphere.setTexture(utils.get2D(texture));
     } catch (IOException e) {
       System.out.println("Exception!" + e);
     }
@@ -62,7 +62,7 @@ public class Renderer{
     float fovY = 70;
     float fovX = fovY * aspectRatio;
     
-    int iterMax = 4;
+    int iterMax = 5;
     vec3[] alpha = new vec3[iterMax];
 
     BufferedImage frame = new BufferedImage(resolution[0], resolution[1], BufferedImage.TYPE_INT_RGB);
