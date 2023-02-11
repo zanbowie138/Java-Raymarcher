@@ -73,8 +73,8 @@ public class utils {
   }
 
   public static float[] getUV(vec3 unitVec) {
-    float u = 0.5f + (float)(Math.atan2(unitVec.y,unitVec.x)/(2*Math.PI));
-    float v = 0.5f + (float)(Math.asin(unitVec.z)/Math.PI);
+    float u = 0.5f + (float)(Math.asin(unitVec.y)/Math.PI);
+    float v = 0.5f + (float)(Math.asin(unitVec.x)/Math.PI);
 
     return new float[]{u,v};
   }

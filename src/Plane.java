@@ -26,11 +26,11 @@ public class Plane extends RenderableObject {
     return Math.abs(vec3.dot(this.normal, point) - dist);
   }
 
-  @Override
+  /*@Override
   public vec3 getNormal(vec3 p) {
     return this.normal;
   }
   public vec3 getNormal() {
     return getNormal();
-  }
+  }*/
 }

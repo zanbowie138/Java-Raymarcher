@@ -39,12 +39,12 @@ public class Renderer{
     Material pl_mat = new Material(new vec3(0,1,0));
     Plane plane = new Plane(new vec3(0f,1f,0f).normalize(), 200,pl_mat);
 
-    objects = new RenderableObject[]{plane};
+    objects = new RenderableObject[]{sphere,plane};
 
     light = new Light(lightPosition,lightColor);
     
     try {
-        BufferedImage image = utils.convertToARGB(ImageIO.read(new File("res/lake.png")));
+        BufferedImage image = utils.convertToARGB(ImageIO.read(new File("res/curtain.jpg")));
         skybox = utils.get2D(image);
         //BufferedImage texture = utils.convertToARGB(ImageIO.read(new File("res/checker.png")));
         //sphere.setTexture(utils.get2D(texture));
@@ -62,7 +62,7 @@ public class Renderer{
     float fovY = 70;
     float fovX = fovY * aspectRatio;
     
-    int iterMax = 1;
+    int iterMax = 4;
     vec3[] alpha = new vec3[iterMax];
 
     BufferedImage frame = new BufferedImage(resolution[0], resolution[1], BufferedImage.TYPE_INT_RGB);
@@ -140,7 +140,6 @@ public class Renderer{
     float specularIntensity = 0.4f * shadowValue;
 
     vec3 ambient = vec3.scale(light.getColor(), ambientIntensity);
-
     
     vec3 normalVector = obj.getNormal(pt);
     vec3 pointToLightVector = vec3.getDir(pt, light.pos());
@@ -167,17 +166,12 @@ public class Renderer{
     while (!finished) {
       rayMarchReturn rayMarchReturn = rayMarch(objects, px);
       float closestSignedDist = rayMarchReturn.signedDist;
-      RenderableObject closestObject = objects[rayMarchReturn.object];
-      //System.out.println(closestSignedDist);
-
       if (closestSignedDist < .01) {
         return 0;
       } 
-      
       else if (closestSignedDist > vec3.getDist(px, light.pos())) {
         return 1;
       }
-
       else {
         px.add(vec3.scale(pointToLightVector,closestSignedDist));
       }
