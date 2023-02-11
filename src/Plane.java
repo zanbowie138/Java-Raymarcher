@@ -7,18 +7,18 @@ public class Plane extends RenderableObject {
 
   public Plane() {
     this.normal = new vec3(0,1,0);
-    this.setColor(new vec3(1,1,1));
+    this.setMaterial(new Material(new vec3(1,1,1)));
   }
   public Plane(vec3 normal, float dist) {
     this.normal = normal;
     this.dist = dist;
-    this.setColor(new vec3(1,1,1));
+    this.setMaterial(new Material(new vec3(1,1,1)));
   }
 
-  public Plane(vec3 normal, float dist, vec3 color) {
+  public Plane(vec3 normal, float dist, Material mat) {
     this.normal = normal;
     this.dist = dist;
-    this.setColor(color);
+    this.setMaterial(mat);
   }
 
   @Override
@@ -26,7 +26,11 @@ public class Plane extends RenderableObject {
     return Math.abs(vec3.dot(this.normal, point) - dist);
   }
 
-  public vec3 getNormal() {
+  @Override
+  public vec3 getNormal(vec3 p) {
     return this.normal;
+  }
+  public vec3 getNormal() {
+    return getNormal();
   }
 }

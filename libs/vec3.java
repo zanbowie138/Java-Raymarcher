@@ -169,7 +169,7 @@ public class vec3 {
     return vec3.sub(vec1,vec2).getMagnitude();
   }
 
-  public static vec3 getDirVec(vec3 vec1, vec3 vec2) {
+  public static vec3 getDir(vec3 vec1, vec3 vec2) {
     // Returns a normalized vector pointing from vec1 to vec2
     return vec3.sub(vec2,vec1).normalize();
   }

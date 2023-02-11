@@ -1,6 +1,12 @@
 package libs;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.awt.Graphics2D;
+
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+
 public class utils {
   // A fast lookup table for sin and cos
   // Taken from https://stackoverflow.com/questions/16930581/fast-sine-and-cosine-function-in-java
@@ -44,6 +50,14 @@ public class utils {
     return new vec3(color.x*255,color.y*255,color.z*255);
   }
 
+  public static vec3 intToRGB(int color) {
+    float r = ((color>>16)&0xff)/255.0f;
+    float g = ((color>>8)&0xff)/255.0f;
+    float b = ((color>>0)&0xff)/255.0f;
+
+    return new vec3(r,g,b);
+  }
+
   public static float sineDisplace(vec3 p, float t) {
     float t_scale = .003f;
     float dis = 50f;
@@ -51,16 +65,64 @@ public class utils {
     //System.out.println(p);
     return (float)utils.sin(dis*(p.x + t_scale*t)) + (float)utils.sin(dis*(p.y + t_scale*t)) + (float)utils.sin(dis*(p.z + t_scale*t)) * scale;
   }
-  public static BufferedImage resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
-    Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_DEFAULT);
-    BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
-    outputImage.getGraphics().drawImage(resultingImage, 0, 0, null);
-    return outputImage;
-  }
   public static void p(Object p) {
     System.out.println(p);
   }
   public static float getNormalized (float x, float y) {
     return (float)Math.sqrt(1 - x*x + y*y);
+  }
+
+  public static float[] getUV(vec3 unitVec) {
+    float u = 0.5f + (float)(Math.atan2(unitVec.y,unitVec.x)/(2*Math.PI));
+    float v = 0.5f + (float)(Math.asin(unitVec.z)/Math.PI);
+
+    return new float[]{u,v};
+  }
+
+  public static void imageIoWritePNG(BufferedImage img, String location) {
+    //Prints BufferedImage to location as a png file
+    File output = new File(location);
+    try {
+      ImageIO.write(img, "png", output);
+      System.out.println("Created image!");
+    } catch (IOException e) {
+      System.out.println("Exception occured :" + e.getMessage());
+    }
+  }
+
+  public static int[][] get2D(BufferedImage image) {
+      // https://stackoverflow.com/questions/6524196/java-get-pixel-array-from-image
+      final int[] pixels = ((DataBufferInt) image.getRaster().getDataBuffer()).getData();
+      final int width = image.getWidth();
+      final int height = image.getHeight();
+      int[][] result = new int[height][width];
+       for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel++) {
+          result[row][col] = pixels[pixel];
+          col++;
+          if (col == width) {
+             col = 0;
+             row++;
+          }
+       }
+      return result;
+   }
+
+  public static BufferedImage convertToARGB(BufferedImage image)
+  {
+    BufferedImage newImage = new BufferedImage(
+        image.getWidth(), image.getHeight(),
+        BufferedImage.TYPE_INT_RGB);
+    Graphics2D g = newImage.createGraphics();
+    g.drawImage(image, 0, 0, null);
+    g.dispose();
+    return newImage;
+  }
+  
+  public static int summation(int end) {
+    int output = 0;
+    for (int i = end; i > 0; i--) {
+      output+=i;
+    }
+    return output;
   }
 }

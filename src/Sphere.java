@@ -7,23 +7,28 @@ public class Sphere extends RenderableObject {
   public Sphere() {
     this.setPos(new vec3(0,0,0));
     this.radius = 10;
-    this.setColor(new vec3(1,1,1));
+    this.setMaterial(new Material(new vec3(1,1,1)));
   }
   public Sphere(vec3 pos, int radius) {
     this.setPos(pos);
     this.radius = radius;
-    this.setColor(new vec3(1,1,1));
+    this.setMaterial(new Material(new vec3(1,1,1)));
   }
 
-  public Sphere(vec3 pos, int radius, vec3 color) {
+  public Sphere(vec3 pos, int radius, Material mat) {
     this.setPos(pos);
     this.radius = radius;
-    this.setColor(color);
+    this.setMaterial(mat);
   }
 
   @Override
   public float signedDist(vec3 point) {
     return vec3.getDist(this.pos(),point) - this.radius;
+  }
+
+  @Override
+  public vec3 getNormal(vec3 p) {
+    return vec3.getDir(this.pos(),p);
   }
 
   public int getRadius() {
