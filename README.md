@@ -1,6 +1,6 @@
 # JavaRaymarcher
 
-This is a heavily improved version of my <a href = "https://github.com/zanbowie138/ExpirimentalJava3DRenderer">original Java renderer</a>, using no external libraries, and raymarching, along with many other features.
+This is a heavily improved version of my <a href = "https://github.com/zanbowie138/ExpirimentalJava3DRenderer">original Java renderer</a> with no external libraries, using raymarching, along with many other features.
 
 ## Capabilities:
 - Raymarching (of course)
