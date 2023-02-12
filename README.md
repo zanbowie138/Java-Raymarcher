@@ -47,6 +47,7 @@ Reflections enabled -
 ## TBD
 - Add a GUI
 - Better camera movement
+- Antialiasing
 - Fix skybox
 - Add more shapes
 - Code optimization
