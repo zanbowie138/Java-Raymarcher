@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
+import java.util.Arrays;
+
 import libs.*;
 import src.*;
 
@@ -15,6 +17,8 @@ public class Renderer{
   private RenderableObject[] objects;
   private Light light;
   private int[][] skybox;
+
+  private Sphere light_sphere;
 
   private long time;
 
@@ -36,18 +40,20 @@ public class Renderer{
 
     Material sph_mat = new Material(new vec3(1,0,0));
     Sphere sphere = new Sphere(sphereCenter, sphereSize, sph_mat);
+    Material light_mat = new Material(new vec3(1,1,1));
+    light_sphere = new Sphere(sphereCenter, 10, light_mat);
     Material pl_mat = new Material(new vec3(0,1,0));
     Plane plane = new Plane(new vec3(0f,1f,0f).normalize(), 200,pl_mat);
 
-    objects = new RenderableObject[]{sphere,plane};
+    objects = new RenderableObject[]{light_sphere, sphere, plane};
 
     light = new Light(lightPosition,lightColor);
     
     try {
-        BufferedImage image = utils.convertToARGB(ImageIO.read(new File("res/studio.jpg")));
+        BufferedImage image = utils.convertToARGB(ImageIO.read(new File("res/lake.png")));
         skybox = utils.get2D(image);
         BufferedImage texture = utils.convertToARGB(ImageIO.read(new File("res/checkers.png")));
-        sphere.setTexture(utils.get2D(texture));
+        //sphere.setTexture(utils.get2D(texture));
     } catch (IOException e) {
       System.out.println("Exception!" + e);
     }
@@ -89,6 +95,9 @@ public class Renderer{
           RenderableObject closestObject = objects[rayMarchReturn.object];
           
           if (closestSignedDist < 1) {
+            if (closestObject instanceof Plane | closestObject.equals(objects[0])) {
+              finished = true;
+            }
             dir = vec3.reflect(closestObject.getNormal(px),dir);
             alpha[iter] = calcColor(closestObject, px);
             px.add(vec3.scale(dir,1f));
@@ -164,7 +173,7 @@ public class Renderer{
     boolean finished = false;
 
     while (!finished) {
-      rayMarchReturn rayMarchReturn = rayMarch(objects, px);
+      rayMarchReturn rayMarchReturn = rayMarch(Arrays.copyOfRange(objects, 1, objects.length), px);
       float closestSignedDist = rayMarchReturn.signedDist;
       if (closestSignedDist < .01) {
         return 0;
@@ -185,6 +194,7 @@ public class Renderer{
     //camera.setPos(display.updateCam().mult(-150));
     display.updateCam();
     light.setPos(new vec3((float)Math.sin(time/5/100f)*100f, -90, -90));
+    light_sphere.setPos(new vec3((float)Math.sin(time/5/100f)*100f, -90, -90));
     display.render(generateFrame());
   }
 
