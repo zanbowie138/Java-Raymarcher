@@ -23,8 +23,17 @@ public class Sphere extends RenderableObject {
 
   @Override
   public float signedDist(vec3 point) {
+    if (Float.isNaN(vec3.getDist(this.pos(),point) - this.radius)) {
+      System.out.println("Point: " + point);
+      System.out.println("Sphere position: " + this.pos());
+      System.out.println("Radius: " + this.radius);
+      throw new RuntimeException("NaN detected in signedDist");
+    }
     return vec3.getDist(this.pos(),point) - this.radius;
+
   }
+
+
 
   @Override
   public vec3 getNormal(vec3 p) {

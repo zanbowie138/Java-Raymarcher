@@ -23,8 +23,12 @@ public class Plane extends RenderableObject {
 
   @Override
   public float signedDist(vec3 point) {
+    if (Float.isNaN(Math.abs(vec3.dot(this.normal, point) - dist))) {
+      throw new RuntimeException("NaN detected in signedDist");
+    }
     return Math.abs(vec3.dot(this.normal, point) - dist);
   }
+
 
   /*@Override
   public vec3 getNormal(vec3 p) {

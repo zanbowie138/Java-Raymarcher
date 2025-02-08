@@ -19,8 +19,8 @@ public class Renderer{
   private long time;
 
   public Renderer() {
-    display = new Display(700, 700, "Raymarcher");
-    resolution = new int[]{500,500};
+    display = new Display(480, 300, "Raymarcher");
+    resolution = new int[]{480,300};
 
     time = 0;
 
@@ -56,12 +56,12 @@ public class Renderer{
   // Generates a frame of the scene
   private BufferedImage generateFrame() {
     // Calculated by dividing screen width by screen height
-    float aspectRatio = (float)resolution[0]/resolution[1];
+    float aspectRatio = (float)resolution[0] / resolution[1];
 
     // The degrees of the field of view in the y direction
     float fovY = 70;
     float fovX = fovY * aspectRatio;
-    
+
     int iterMax = 5;
     vec3[] alpha = new vec3[iterMax];
 
@@ -69,51 +69,51 @@ public class Renderer{
 
     int maxRayDist = 10000;
     int maxSightDist = 5000;
-    
+
     for (int x = 0; x < resolution[0]; x++) {
       for (int y = 0; y < resolution[1]; y++) {
         vec3 px = camera.pos().copy();
-        
-        float dirX = (float)utils.sin((float)(fovX * ((float)x/resolution[0] - 0.5f)));
-        float dirY = (float)utils.sin((float)(fovY * ((float)y/resolution[1] - 0.5f)));
-        float dirZ = (float)Math.sqrt(1 - dirX*dirX - dirY*dirY);
-        
-        vec3 dir = new vec3(dirX, dirY, dirZ);
-        
+
+        float dirX = (float) Math.sin(Math.toRadians(fovX * ((float) x / resolution[0] - 0.5f)));
+        float dirY = (float) Math.sin(Math.toRadians(fovY * ((float) y / resolution[1] - 0.5f)));
+        float dirZ = (float) Math.sqrt(Math.max(0, 1 - (dirX * dirX) - (dirY * dirY)));
+
+        vec3 dir = new vec3(dirX, dirY, dirZ).normalize();
+
+
+
         boolean finished = false;
         int iter = 0;
-        
+
         while (!finished && iter < iterMax) {
-          rayMarchReturn rayMarchReturn = rayMarch(objects, px);
+          rayMarchReturn rayMarchReturn = rayMarch(this.objects, px);
           float closestSignedDist = rayMarchReturn.signedDist;
-          RenderableObject closestObject = objects[rayMarchReturn.object];
-          
+          RenderableObject closestObject = this.objects[rayMarchReturn.object];
+
           if (closestSignedDist < 1) {
-            dir = vec3.reflect(closestObject.getNormal(px),dir);
+            dir = vec3.reflect(closestObject.getNormal(px), dir);
             alpha[iter] = calcColor(closestObject, px);
-            px.add(vec3.scale(dir,1f));
+            px.add(vec3.scale(dir, 1f));
             iter++;
-          } 
-          
-          else if (closestSignedDist > maxRayDist | vec3.getDist(px, camera.pos()) > maxSightDist) {
+          } else if (closestSignedDist > maxRayDist || vec3.getDist(px, camera.pos()) > maxSightDist) {
             // Point is too far from objects
-            float[] textCoord = utils.getUV(dir.normalize());
-            vec3 skyboxColor = utils.intToRGB(this.skybox[(int)(textCoord[0] * (skybox.length-1))][(int)(textCoord[1] * (skybox[0].length-1))]);
+            float[] textCoord = utils.getUV(dir);
+            vec3 skyboxColor = utils.intToRGB(this.skybox[(int) (textCoord[0] * (skybox.length - 1))][(int) (textCoord[1] * (skybox[0].length - 1))]);
             alpha[iter] = skyboxColor;
             iter++;
             finished = true;
-          }
-            
-          else {
-            px.add(vec3.scale(dir,closestSignedDist));
+          } else {
+            // Ensure we don't get stuck in an infinite loop
+            float stepSize = Math.max(closestSignedDist, 0.01f); // Prevents too small steps
+            px.add(vec3.scale(dir, stepSize));
           }
         }
-        
-        vec3 px_color = new vec3(0,0,0);
+
+        vec3 px_color = new vec3(0, 0, 0);
         for (int a = 0; a < iter; a++) {
-          px_color.add(alpha[a].mult((iter-(float)a)/(float)utils.summation(iter)));
+          px_color.add(alpha[a].mult((iter - (float) a) / (float) utils.summation(iter)));
         }
-        
+
         frame.setRGB(x, y, utils.rgbToInt(px_color));
       }
     }
